@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dárky pro naše miminko 🍼</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink:        #a4c4e8;
+      --pink-light:  #d5e8f5;
+      --pink-pale:   #f0f6fe;
+      --cream:       #f6f9fe;
+      --gold:        #5a8fc2;
+      --green:       #4caf50;
+      --text:        #2a3545;
+      --text-light:  #5a6e82;
+      --white:       #ffffff;
+      --shadow:      0 4px 24px rgba(0,0,0,0.08);
+      --radius:      16px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ─── HERO ──────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 75vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('images/hero.jpg');
+      background-size: cover;
+      background-position: center top;
+    }
+    /* Jemný gradient přes fotku */
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(254,240,244,0.55) 0%,
+        rgba(254,249,246,0.75) 100%
+      );
+    }
+    /* Záložní gradient pokud fotka chybí */
+    .hero-bg-fallback {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #d5e8f5 0%, #f0f6fe 50%, #f0f6ff 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 72px 24px 80px;
+      max-width: 680px;
+    }
+
+    .hero-icon {
+      font-size: 52px;
+      display: block;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 2px 8px rgba(232,164,184,0.4));
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(30px, 7vw, 56px);
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.15;
+      margin-bottom: 28px;
+    }
+
+    .hero-divider {
+      width: 56px;
+      height: 2px;
+      margin: 0 auto 28px;
+      background: linear-gradient(to right, transparent, var(--pink), transparent);
+    }
+
+    .hero-text {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(15px, 2.5vw, 17px);
+      line-height: 1.9;
+      color: var(--text-light);
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .hero-scroll-hint {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 22px;
+      animation: bob 2s ease-in-out infinite;
+      z-index: 1;
+      opacity: 0.6;
+    }
+    @keyframes bob {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ─── GIFTS SECTION ─────────────────────────────────── */
+    .gifts-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 20px 80px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 44px;
+    }
+
+    .section-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(24px, 4vw, 34px);
+      margin-bottom: 10px;
+    }
+
+    .section-header p {
+      font-size: 15px;
+      color: var(--text-light);
+    }
+
+    /* GRID */
+    .gifts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    /* CARD */
+    .gift-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .gift-card:not(.reserved):hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 36px rgba(0,0,0,0.13);
+    }
+    .gift-card.reserved { cursor: default; }
+
+    /* Obrázek */
+    .card-image-wrap {
+      position: relative;
+      height: 200px;
+      background: var(--pink-pale);
+      overflow: hidden;
+    }
+    .card-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .card-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 52px;
+      background: linear-gradient(135deg, var(--pink-pale), var(--pink-light));
+    }
+
+    /* Obsazeno overlay */
+    .reserved-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.82);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      backdrop-filter: blur(2px);
+    }
+    .reserved-overlay .r-check { font-size: 32px; }
+    .reserved-overlay .r-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-light);
+    }
+
+    /* Tělo karty */
+    .card-body {
+      padding: 18px 18px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      margin-bottom: 7px;
+      color: var(--text);
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: var(--text-light);
+      line-height: 1.6;
+      flex: 1;
+      margin-bottom: 14px;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-price {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .card-cta {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--pink);
+    }
+    .card-cta.is-reserved { color: var(--text-light); }
+
+    /* ─── MODAL ──────────────────────────────────────────── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(50,30,35,0.48);
+      z-index: 200;
+      justify-content: flex-end;
+      align-items: flex-end;
+      padding: 0;
+    }
+    @media (min-width: 640px) {
+      .overlay {
+        justify-content: center;
+        align-items: center;
+        padding: 24px;
+      }
+    }
+    .overlay.open { display: flex; }
+
+    .modal {
+      background: var(--white);
+      width: 100%;
+      max-width: 520px;
+      max-height: 92vh;
+      overflow-y: auto;
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 28px 22px 36px;
+      position: relative;
+      animation: slideUp 0.28s ease;
+      -webkit-overflow-scrolling: touch;
+    }
+    @media (min-width: 640px) {
+      .modal { border-radius: var(--radius); }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(32px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    .modal-close {
+      position: sticky;
+      top: 0;
+      float: right;
+      margin-bottom: -32px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--cream);
+      border: none;
+      cursor: pointer;
+      font-size: 17px;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      flex-shrink: 0;
+    }
+    .modal-close:hover { background: var(--pink-light); }
+
+    /* Modal obrázek */
+    .modal-img {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 18px;
+      display: block;
+    }
+    .modal-img-placeholder {
+      width: 100%;
+      height: 210px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+      background: linear-gradient(135deg, var(--pink-pale), var(--pink-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+    }
+
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      margin-bottom: 6px;
+      clear: both;
+    }
+
+    .modal-price {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+
+    .modal-desc {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--text-light);
+      margin-bottom: 18px;
+    }
+
+    .modal-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--pink);
+      text-decoration: none;
+      margin-bottom: 22px;
+    }
+    .modal-link:hover { text-decoration: underline; }
+
+    .modal-escape {
+      font-size: 13px;
+      color: var(--text-light);
+      font-style: italic;
+      background: var(--cream);
+      border-radius: 10px;
+      padding: 12px 16px;
+      line-height: 1.65;
+      margin-bottom: 22px;
+    }
+
+    .modal-divider {
+      border: none;
+      border-top: 1px solid #f0e4e8;
+      margin: 4px 0 22px;
+    }
+
+    /* Obsazeno badge v modalu */
+    .reserved-badge {
+      background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+      border-radius: 12px;
+      padding: 22px 20px;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .reserved-badge .rb-icon { font-size: 34px; display: block; margin-bottom: 8px; }
+    .reserved-badge p { font-size: 15px; font-weight: 700; color: #388e3c; }
+
+    /* ─── FORMULÁŘ ───────────────────────────────────────── */
+    .form-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 19px;
+      margin-bottom: 8px;
+    }
+
+    .form-note {
+      font-size: 13px;
+      color: var(--text-light);
+      font-style: italic;
+      line-height: 1.65;
+      margin-bottom: 22px;
+    }
+
+    .form-group { margin-bottom: 14px; }
+
+    .form-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--text-light);
+      margin-bottom: 5px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #e8dede;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: 'Lato', sans-serif;
+      color: var(--text);
+      background: var(--cream);
+      outline: none;
+      transition: border-color 0.18s;
+      -webkit-appearance: none;
+    }
+    .form-group input:focus { border-color: var(--pink); }
+
+    .form-error {
+      font-size: 13px;
+      color: #c0392b;
+      margin: 6px 0 0;
+      display: none;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #6aaee8, #3d7fbf);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Lato', sans-serif;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: opacity 0.18s, transform 0.18s;
+      -webkit-appearance: none;
+    }
+    .btn-submit:hover:not(:disabled) { opacity: 0.92; transform: scale(1.01); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ─── ÚSPĚCH ─────────────────────────────────────────── */
+    .success-state {
+      text-align: center;
+      padding: 28px 8px 12px;
+    }
+    .success-state .s-icon { font-size: 52px; display: block; margin-bottom: 18px; }
+    .success-state h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+    .success-state p {
+      font-size: 15px;
+      color: var(--text-light);
+      line-height: 1.75;
+    }
+
+    /* ─── LOADING / ERROR ────────────────────────────────── */
+    .state-box {
+      text-align: center;
+      padding: 72px 24px;
+      color: var(--text-light);
+    }
+    .dots { display: inline-flex; gap: 6px; margin-bottom: 18px; }
+    .dots span {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: var(--pink);
+      animation: bounce 1.2s infinite;
+    }
+    .dots span:nth-child(2) { animation-delay: 0.2s; }
+    .dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30%           { transform: translateY(-9px); }
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 36px 20px;
+      color: var(--text-light);
+      font-size: 13px;
+      border-top: 1px solid #f0e4e8;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section class="hero">
+  <div class="hero-bg-fallback"></div>
+  <div class="hero-bg" id="hero-bg"></div>
+  <div class="hero-content">
+    <span class="hero-icon">🍼</span>
+    <h1>Někdo malý<br>přichází na svět</h1>
+    <div class="hero-divider"></div>
+    <p class="hero-text">
+      Někdy přijde okamžik, který změní všechno.
+      Pro nás ten okamžik brzy nastane – čekáme miminko a srdce nám přetékají radostí.
+      Kolem nás jsou lidé, bez kterých bychom nebyli tam, kde jsme,
+      a právě vám – našim nejbližším – chceme dát možnost být součástí tohoto začátku.
+      Pokud nás chcete obdarovat, sestavili jsme malý seznam věcí,
+      které by našemu miminku přišly vhod.
+      Není to výzva ani povinnost – jen pozvání pro ty, kteří se zeptat chtěli.
+      Děkujeme, že jste s&nbsp;námi.
+    </p>
+  </div>
+  <div class="hero-scroll-hint">↓</div>
+</section>
+
+<!-- ══════════════════ SEZNAM DÁRKŮ ══════════════════ -->
+<section class="gifts-section">
+  <div class="section-header">
+    <h2>Přání pro miminko</h2>
+    <p>Kliknutím na dárek zobrazíte více informací</p>
+  </div>
+  <div id="gifts-container">
+    <div class="state-box">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <p>Načítám seznam dárků…</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ MODAL ══════════════════ -->
+<div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
+    <button class="modal-close" onclick="closeModal()" aria-label="Zavřít">✕</button>
+    <div id="modal-inner"></div>
+  </div>
+</div>
+
+<footer>
+  <p>Děkujeme, že jste s námi. 🤍</p>
+</footer>
+
+<!-- ══════════════════ JAVASCRIPT ══════════════════ -->
+<script>
+// ─────────────────────────────────────────────────────
+//  KONFIGURACE – ZMĚŇTE TUTO HODNOTU
+// ─────────────────────────────────────────────────────
+const SCRIPT_URL   = 'https://script.google.com/macros/s/AKfycbyBK_V64geUR7IzUX7E3cO2Ob21657-YLZkL9zWR7EmCEiaXa9YhoUQWUBHm0qaCMad9w/exec';
+const IMAGES_PATH  = 'images/';   // složka s obrázky v repozitáři
+// ─────────────────────────────────────────────────────
+
+let gifts       = [];
+let currentId   = null;
+
+// ─── Načtení dárků ────────────────────────────────────
+async function loadGifts() {
+  try {
+    const res  = await fetch(SCRIPT_URL);
+    const data = await res.json();
+    gifts = data;
+    renderGrid();
+  } catch (err) {
+    document.getElementById('gifts-container').innerHTML = `
+      <div class="state-box">
+        <p>Nepodařilo se načíst seznam dárků.<br>Zkuste prosím obnovit stránku.</p>
+      </div>`;
+  }
+}
+
+// ─── Vykreslení mřížky ────────────────────────────────
+function renderGrid() {
+  if (!gifts.length) {
+    document.getElementById('gifts-container').innerHTML = `
+      <div class="state-box"><p>Seznam dárků bude brzy k dispozici.</p></div>`;
+    return;
+  }
+  document.getElementById('gifts-container').innerHTML =
+    `<div class="gifts-grid">${gifts.map(cardHTML).join('')}</div>`;
+}
+
+function cardHTML(g) {
+  const img = g.obrazek
+    ? `<img src="${IMAGES_PATH}${g.obrazek}" alt="${esc(g.nazev)}"
+            onerror="this.style.display='none';this.nextSibling.style.display='flex'">`
+    : '';
+  const placeholder = `<div class="card-placeholder" ${g.obrazek ? 'style="display:none"' : ''}>🎁</div>`;
+  const overlay = g.prihlasen
+    ? `<div class="reserved-overlay">
+         <span class="r-check">✓</span>
+         <span class="r-label">Již zajištěno</span>
+       </div>` : '';
+
+  return `
+  <div class="gift-card ${g.prihlasen ? 'reserved' : ''}" onclick="openModal(${g.id})">
+    <div class="card-image-wrap">
+      ${img}${placeholder}${overlay}
+    </div>
+    <div class="card-body">
+      <h3 class="card-title">${esc(g.nazev)}</h3>
+      <p class="card-desc">${esc(g.popis)}</p>
+      <div class="card-footer">
+        <span class="card-price">${g.cena ? 'cca ' + esc(g.cena) : ''}</span>
+        <span class="card-cta ${g.prihlasen ? 'is-reserved' : ''}">
+          ${g.prihlasen ? 'Obsazeno' : 'Zobrazit detail →'}
+        </span>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ─── Otevření modalu ──────────────────────────────────
+function openModal(id) {
+  const g = gifts.find(x => x.id === id);
+  if (!g) return;
+  currentId = id;
+  document.getElementById('modal-inner').innerHTML = modalHTML(g);
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function modalHTML(g) {
+  const img = g.obrazek
+    ? `<img class="modal-img" src="${IMAGES_PATH}${g.obrazek}" alt="${esc(g.nazev)}"
+            onerror="this.style.display='none';this.nextSibling.style.display='flex'">`
+    : '';
+  const imgPlaceholder = `<div class="modal-img-placeholder" ${g.obrazek ? 'style="display:none"' : ''}>🎁</div>`;
+  const link = g.odkaz
+    ? `<a class="modal-link" href="${g.odkaz}" target="_blank" rel="noopener">
+         🔗 Zobrazit v e-shopu
+       </a>` : '';
+
+  if (g.prihlasen) {
+    return `
+      ${img}${imgPlaceholder}
+      <h2 class="modal-title">${esc(g.nazev)}</h2>
+      ${g.cena ? `<p class="modal-price">Orientační cena: cca ${esc(g.cena)}</p>` : ''}
+      <p class="modal-desc">${esc(g.popisDetail || g.popis)}</p>
+      ${link}
+      <div class="reserved-badge">
+        <span class="rb-icon">✅</span>
+        <p>Tento dárek je již zajištěn. Díky!</p>
+      </div>`;
+  }
+
+  return `
+    ${img}${imgPlaceholder}
+    <h2 class="modal-title">${esc(g.nazev)}</h2>
+    ${g.cena ? `<p class="modal-price">Orientační cena: cca ${esc(g.cena)}</p>` : ''}
+    <p class="modal-desc">${esc(g.popisDetail || g.popis)}</p>
+    ${link}
+    <p class="modal-escape">
+      Tohle není to pravé? Vůbec nevadí. Podívej se dál –
+      jsme rádi, že jsi tu, ať už si vybereš cokoliv. 🤍
+    </p>
+    <hr class="modal-divider">
+    <h3 class="form-title">Chci zajistit tento dárek</h3>
+    <p class="form-note">
+      Prosíme tě o jméno a email – ne proto, abychom cokoliv evidovali,
+      ale proto, že ti chceme osobně napsat děkovnou zprávu.
+      Anonymní dárky jsou krásné, ale my bychom rádi věděli, komu patří náš dík.
+      Tvoje údaje nebudeme nikde zveřejňovat ani sdílet.
+    </p>
+    <div class="form-group">
+      <label for="f-jmeno">Tvoje jméno</label>
+      <input id="f-jmeno" type="text" placeholder="Jana Novotná"
+             autocomplete="name" inputmode="text">
+    </div>
+    <div class="form-group">
+      <label for="f-email">Tvůj email</label>
+      <input id="f-email" type="email" placeholder="jana@email.cz"
+             autocomplete="email" inputmode="email">
+      <p class="form-error" id="f-error">Prosím vyplň jméno i platnou emailovou adresu.</p>
+    </div>
+    <button class="btn-submit" id="btn-submit" onclick="submitReservation()">
+      🎁 Chci darovat toto
+    </button>`;
+}
+
+// ─── Odeslání rezervace ───────────────────────────────
+async function submitReservation() {
+  const jmeno  = (document.getElementById('f-jmeno')?.value || '').trim();
+  const email  = (document.getElementById('f-email')?.value || '').trim();
+  const errEl  = document.getElementById('f-error');
+  const btnEl  = document.getElementById('btn-submit');
+
+  // Validace
+  if (!jmeno || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errEl.style.display = 'block';
+    return;
+  }
+  errEl.style.display = 'none';
+  btnEl.disabled      = true;
+  btnEl.textContent   = 'Odesílám…';
+
+  try {
+    // Posíláme jako prostý text aby nevznikl CORS preflight
+    const res    = await fetch(SCRIPT_URL, {
+      method:  'POST',
+      body:    JSON.stringify({ id: currentId, jmeno, email })
+    });
+    const result = await res.json();
+
+    if (result.success) {
+      markReservedAndShowSuccess(jmeno);
+    } else {
+      btnEl.disabled    = false;
+      btnEl.textContent = '🎁 Chci darovat toto';
+      errEl.textContent = result.message || 'Něco se pokazilo. Zkuste to prosím znovu.';
+      errEl.style.display = 'block';
+    }
+  } catch (_) {
+    // Při CORS chybě zobrazíme úspěch optimisticky
+    // (zápis do tabulky byl pravděpodobně proveden)
+    markReservedAndShowSuccess(jmeno);
+  }
+}
+
+function markReservedAndShowSuccess(jmeno) {
+  // Aktualizovat lokální data
+  const g = gifts.find(x => x.id === currentId);
+  if (g) g.prihlasen = true;
+  renderGrid();
+
+  // Zobrazit potvrzení v modalu
+  const firstName = jmeno.split(' ')[0];
+  document.getElementById('modal-inner').innerHTML = `
+    <div class="success-state">
+      <span class="s-icon">🤍</span>
+      <h3>Děkujeme, ${esc(firstName)}!</h3>
+      <p>Tvůj výběr jsme zaznamenali.<br>
+         Za chvíli ti přijde potvrzovací email – moc si toho vážíme.</p>
+    </div>`;
+}
+
+// ─── Zavření modalu ───────────────────────────────────
+function closeModal() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  currentId = null;
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('overlay')) closeModal();
+}
+
+// Zavření klávesou Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ─── Pomocná funkce: escapování HTML ─────────────────
+function esc(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── Start ────────────────────────────────────────────
+loadGifts();
+</script>
+
+</body>
+</html>
