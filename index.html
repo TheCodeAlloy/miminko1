@@ -11,16 +11,16 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --blue:        #6aaee8;
-      --blue-light:  #d5e8f5;
-      --blue-pale:   #f0f6fe;
-      --cream:       #f6f9fe;
-      --gold:        #5a8fc2;
-      --text:        #2a3545;
-      --text-light:  #5a6e82;
-      --white:       #ffffff;
-      --shadow:      0 4px 24px rgba(0,0,0,0.08);
-      --radius:      16px;
+      --blue:       #6aaee8;
+      --blue-light: #d5e8f5;
+      --blue-pale:  #f0f6fe;
+      --cream:      #f6f9fe;
+      --gold:       #5a8fc2;
+      --text:       #2a3545;
+      --text-light: #5a6e82;
+      --white:      #ffffff;
+      --shadow:     0 4px 24px rgba(0,0,0,0.08);
+      --radius:     16px;
     }
 
     html { scroll-behavior: smooth; }
@@ -32,101 +32,115 @@
       min-height: 100vh;
     }
 
-    /* ─── HERO ──────────────────────────────────────────── */
+    /* ═══════════════════════════════════════════════════
+       HERO – split layout: fotka vlevo, text vpravo
+       Na mobilu: fotka nahoře, text dole
+    ═══════════════════════════════════════════════════ */
     .hero {
-      position: relative;
-      min-height: 75vh;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Fotka – horní polovina na mobilu, levá polovina na desktopu */
+    .hero-photo {
+      position: relative;
+      flex: 0 0 50vh;
       overflow: hidden;
+      background: linear-gradient(135deg, #d5e8f5, #f0f6fe);
     }
-
-    .hero-bg-fallback {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, #d5e8f5 0%, #f0f6fe 50%, #f0f6ff 100%);
+    .hero-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
     }
-
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      background-image: url('images/hero.jpg');
-      background-size: cover;
-      background-position: center top;
-    }
-    .hero-bg::after {
+    /* Jemný přechod dole u fotky aby splynula s textem */
+    .hero-photo::after {
       content: '';
       position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to bottom,
-        rgba(240,246,254,0.55) 0%,
-        rgba(246,249,254,0.75) 100%
-      );
+      bottom: 0; left: 0; right: 0;
+      height: 80px;
+      background: linear-gradient(to bottom, transparent, var(--cream));
     }
 
-    .hero-content {
-      position: relative;
-      z-index: 1;
+    /* Textová část */
+    .hero-text-wrap {
+      padding: 40px 28px 52px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
-      padding: 72px 24px 80px;
-      max-width: 680px;
     }
 
     .hero-icon {
-      font-size: 52px;
+      font-size: 44px;
       display: block;
-      margin-bottom: 20px;
-      filter: drop-shadow(0 2px 8px rgba(106,174,232,0.4));
+      margin-bottom: 18px;
+      filter: drop-shadow(0 2px 8px rgba(106,174,232,0.35));
     }
 
     .hero h1 {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(30px, 7vw, 56px);
+      font-size: clamp(28px, 6vw, 48px);
       font-weight: 600;
       color: var(--text);
       line-height: 1.15;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
     .hero-divider {
-      width: 56px;
+      width: 48px;
       height: 2px;
-      margin: 0 auto 28px;
+      margin: 0 auto 24px;
       background: linear-gradient(to right, transparent, var(--blue), transparent);
     }
 
-    .hero-text {
+    .hero-body {
       font-family: 'Playfair Display', serif;
       font-style: italic;
-      font-size: clamp(15px, 2.5vw, 17px);
-      line-height: 1.9;
+      font-size: clamp(14px, 2.2vw, 16px);
+      line-height: 1.95;
       color: var(--text-light);
-      max-width: 560px;
-      margin: 0 auto;
+      max-width: 540px;
+    }
+    .hero-body p { margin-bottom: 14px; }
+    .hero-body p:last-child { margin-bottom: 0; }
+
+    /* Desktop: vedle sebe */
+    @media (min-width: 860px) {
+      .hero {
+        flex-direction: row;
+        min-height: 100vh;
+      }
+      .hero-photo {
+        flex: 0 0 50%;
+        height: auto;
+      }
+      .hero-photo::after {
+        top: 0; bottom: 0; left: auto; right: 0;
+        width: 80px;
+        height: 100%;
+        background: linear-gradient(to right, transparent, var(--cream));
+      }
+      .hero-text-wrap {
+        flex: 1;
+        padding: 60px 56px 60px 40px;
+        text-align: left;
+        align-items: flex-start;
+      }
+      .hero-divider { margin-left: 0; }
     }
 
-    .hero-scroll-hint {
-      position: absolute;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 22px;
-      animation: bob 2s ease-in-out infinite;
-      z-index: 1;
-      opacity: 0.5;
-    }
-    @keyframes bob {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50%       { transform: translateX(-50%) translateY(6px); }
-    }
-
-    /* ─── GIFTS SECTION ─────────────────────────────────── */
+    /* ═══════════════════════════════════════════════════
+       GIFTS SECTION
+    ═══════════════════════════════════════════════════ */
     .gifts-section {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 64px 20px 80px;
+      padding: 64px 20px 40px;
     }
 
     .section-header {
@@ -135,7 +149,7 @@
     }
     .section-header h2 {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(24px, 4vw, 34px);
+      font-size: clamp(22px, 4vw, 32px);
       margin-bottom: 10px;
     }
     .section-header p {
@@ -158,7 +172,6 @@
       overflow: hidden;
       cursor: pointer;
       transition: transform 0.22s ease, box-shadow 0.22s ease;
-      position: relative;
       display: flex;
       flex-direction: column;
     }
@@ -168,28 +181,30 @@
     }
     .gift-card.reserved { cursor: default; }
 
+    /* Obrázek – FIX: contain aby byl vidět celý */
     .card-image-wrap {
       position: relative;
       height: 200px;
-      background: var(--blue-pale);
+      background: linear-gradient(135deg, var(--blue-pale), var(--blue-light));
       overflow: hidden;
-    }
-    .card-image-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .card-placeholder {
-      width: 100%;
-      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+    .card-image-wrap img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      padding: 8px;
+    }
+    .card-placeholder {
       font-size: 52px;
-      background: linear-gradient(135deg, var(--blue-pale), var(--blue-light));
     }
 
+    /* Obsazeno overlay */
     .reserved-overlay {
       position: absolute;
       inset: 0;
@@ -247,29 +262,45 @@
     }
     .card-cta.is-reserved { color: var(--text-light); }
 
-    /* ─── MODAL ──────────────────────────────────────────── */
+    /* Věta pod gridem */
+    .gifts-footer-note {
+      text-align: center;
+      margin-top: 36px;
+      font-size: 14px;
+      font-style: italic;
+      color: var(--text-light);
+    }
+
+    /* ═══════════════════════════════════════════════════
+       MODAL – FIX: začíná od vrchu, ne uprostřed
+    ═══════════════════════════════════════════════════ */
     .overlay {
       display: none;
       position: fixed;
       inset: 0;
       background: rgba(30,40,60,0.48);
       z-index: 200;
+      /* Mobil: modal vyskočí zdola */
       justify-content: flex-end;
       align-items: flex-end;
     }
+    .overlay.open { display: flex; }
+
     @media (min-width: 640px) {
       .overlay {
+        /* Desktop: modal od vrchu, ne uprostřed */
         justify-content: center;
-        align-items: center;
-        padding: 24px;
+        align-items: flex-start;
+        padding: 40px 24px 24px;
+        overflow-y: auto;
       }
     }
-    .overlay.open { display: flex; }
 
     .modal {
       background: var(--white);
       width: 100%;
       max-width: 520px;
+      /* Mobil: max 92% výšky s posouváním */
       max-height: 92vh;
       overflow-y: auto;
       border-radius: var(--radius) var(--radius) 0 0;
@@ -279,18 +310,23 @@
       -webkit-overflow-scrolling: touch;
     }
     @media (min-width: 640px) {
-      .modal { border-radius: var(--radius); }
+      .modal {
+        border-radius: var(--radius);
+        /* Desktop: přirozená výška, posouvání zajistí overlay */
+        max-height: none;
+        overflow-y: visible;
+        margin-bottom: 40px;
+      }
     }
     @keyframes slideUp {
-      from { transform: translateY(32px); opacity: 0; }
+      from { transform: translateY(24px); opacity: 0; }
       to   { transform: translateY(0);    opacity: 1; }
     }
 
     .modal-close {
-      position: sticky;
-      top: 0;
-      float: right;
-      margin-bottom: -32px;
+      position: absolute;
+      top: 16px;
+      right: 16px;
       width: 32px;
       height: 32px;
       border-radius: 50%;
@@ -303,34 +339,37 @@
       align-items: center;
       justify-content: center;
       z-index: 10;
+      flex-shrink: 0;
     }
     .modal-close:hover { background: var(--blue-light); }
 
-    .modal-img {
+    /* Modal obrázek – FIX: contain pro výškové fotky */
+    .modal-img-wrap {
       width: 100%;
-      height: 210px;
-      object-fit: cover;
-      border-radius: 12px;
-      margin-bottom: 18px;
-      display: block;
-    }
-    .modal-img-placeholder {
-      width: 100%;
-      height: 210px;
+      height: 220px;
       border-radius: 12px;
       margin-bottom: 18px;
       background: linear-gradient(135deg, var(--blue-pale), var(--blue-light));
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 64px;
+      overflow: hidden;
     }
+    .modal-img-wrap img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      padding: 8px;
+    }
+    .modal-img-placeholder { font-size: 64px; }
 
     .modal-title {
       font-family: 'Playfair Display', serif;
       font-size: 22px;
       margin-bottom: 6px;
-      clear: both;
+      padding-right: 36px; /* místo pro close button */
     }
     .modal-price {
       font-size: 15px;
@@ -381,7 +420,7 @@
     .reserved-badge .rb-icon { font-size: 34px; display: block; margin-bottom: 8px; }
     .reserved-badge p { font-size: 15px; font-weight: 700; color: #388e3c; }
 
-    /* ─── FORMULÁŘ ───────────────────────────────────────── */
+    /* ─── FORMULÁŘ ─── */
     .form-title {
       font-family: 'Playfair Display', serif;
       font-size: 19px;
@@ -394,6 +433,9 @@
       line-height: 1.65;
       margin-bottom: 22px;
     }
+    .form-note p { margin-bottom: 6px; }
+    .form-note p:last-child { margin-bottom: 0; }
+
     .form-group { margin-bottom: 14px; }
     .form-group label {
       display: block;
@@ -444,7 +486,7 @@
     .btn-submit:hover:not(:disabled) { opacity: 0.92; transform: scale(1.01); }
     .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    /* ─── ÚSPĚCH ─────────────────────────────────────────── */
+    /* ─── ÚSPĚCH ─── */
     .success-state {
       text-align: center;
       padding: 28px 8px 12px;
@@ -461,7 +503,7 @@
       line-height: 1.75;
     }
 
-    /* ─── LOADING / ERROR ────────────────────────────────── */
+    /* ─── LOADING / ERROR ─── */
     .state-box {
       text-align: center;
       padding: 72px 24px;
@@ -478,10 +520,10 @@
     .dots span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes bounce {
       0%, 60%, 100% { transform: translateY(0); }
-      30%           { transform: translateY(-9px); }
+      30%            { transform: translateY(-9px); }
     }
 
-    /* ─── FOOTER ─────────────────────────────────────────── */
+    /* ─── FOOTER ─── */
     footer {
       text-align: center;
       padding: 36px 20px;
@@ -493,33 +535,40 @@
 </head>
 <body>
 
-<!-- ══════════════════ HERO ══════════════════ -->
+<!-- ══════════════════════════════════════════════════════
+     HERO – split: fotka + text vedle sebe (desktop)
+     nebo fotka nahoře + text dole (mobil)
+════════════════════════════════════════════════════════ -->
 <section class="hero">
-  <div class="hero-bg-fallback"></div>
-  <div class="hero-bg"></div>
-  <div class="hero-content">
+
+  <!-- Fotka -->
+  <div class="hero-photo">
+    <img src="images/hero.jpg" alt="Eliška a David čekají miminko"
+         onerror="this.style.display='none'">
+  </div>
+
+  <!-- Text -->
+  <div class="hero-text-wrap">
     <span class="hero-icon">🍼</span>
     <h1>Někdo malý<br>přichází na svět</h1>
     <div class="hero-divider"></div>
-    <p class="hero-text">
-      Někdy přijde okamžik, který změní všechno.
-      Pro nás ten okamžik brzy nastane – čekáme miminko a srdce nám přetékají radostí.
-      Kolem nás jsou lidé, bez kterých bychom nebyli tam, kde jsme,
-      a právě vám – našim nejbližším – chceme dát možnost být součástí tohoto začátku.
-      Pokud nás chcete obdarovat, sestavili jsme malý seznam věcí,
-      které by našemu miminku přišly vhod.
-      Není to výzva ani povinnost – jen pozvání pro ty, kteří se zeptat chtěli.
-      Děkujeme, že jste s&nbsp;námi.
-    </p>
+    <div class="hero-body">
+      <p>Někdy přijde chvíle, která změní úplně všechno. Pro nás taková chvíle právě přichází – čekáme miminko a naše srdce jsou plná radosti.</p>
+      <p>Máme kolem sebe lidi, bez kterých by náš život nebyl takový, jaký je. A právě vám – našim nejbližším – chceme dát možnost být součástí tohoto nového začátku.</p>
+      <p>Připravili jsme malý seznam drobností, které mohou našemu miminku v prvních dnech a měsících udělat radost. Není to prosba ani povinnost – jen drobná pomoc pro ty, kteří se nás stejně chtěli zeptat.</p>
+      <p>Děkujeme, že jste součástí našeho příběhu.</p>
+    </div>
   </div>
-  <div class="hero-scroll-hint">↓</div>
+
 </section>
 
-<!-- ══════════════════ SEZNAM DÁRKŮ ══════════════════ -->
+<!-- ══════════════════════════════════════════════════════
+     SEZNAM DÁRKŮ
+════════════════════════════════════════════════════════ -->
 <section class="gifts-section">
   <div class="section-header">
-    <h2>Přání pro miminko</h2>
-    <p>Kliknutím na dárek zobrazíte více informací</p>
+    <h2>Malé (i větší) radosti pro miminko</h2>
+    <p>Kliknutím na dárek se zobrazí více informací.</p>
   </div>
   <div id="gifts-container">
     <div class="state-box">
@@ -527,9 +576,14 @@
       <p>Načítám seznam dárků…</p>
     </div>
   </div>
+  <p class="gifts-footer-note">
+    Pokud bys raději vybral/a něco úplně jiného, budeme za to stejně vděční.
+  </p>
 </section>
 
-<!-- ══════════════════ MODAL ══════════════════ -->
+<!-- ══════════════════════════════════════════════════════
+     MODAL
+════════════════════════════════════════════════════════ -->
 <div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
   <div class="modal" id="modal" role="dialog" aria-modal="true">
     <button class="modal-close" onclick="closeModal()" aria-label="Zavřít">✕</button>
@@ -541,10 +595,12 @@
   <p>Děkujeme, že jste s námi. 🤍</p>
 </footer>
 
-<!-- ══════════════════ JAVASCRIPT ══════════════════ -->
+<!-- ══════════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════════════ -->
 <script>
 // ─────────────────────────────────────────────────────
-//  KONFIGURACE – ZMĚŇTE TUTO HODNOTU
+//  KONFIGURACE
 // ─────────────────────────────────────────────────────
 const SCRIPT_URL  = 'https://script.google.com/macros/s/AKfycbyBK_V64geUR7IzUX7E3cO2Ob21657-YLZkL9zWR7EmCEiaXa9YhoUQWUBHm0qaCMad9w/exec';
 const IMAGES_PATH = 'images/';
@@ -552,6 +608,36 @@ const IMAGES_PATH = 'images/';
 
 let gifts     = [];
 let currentId = null;
+
+// ─── Vokativ (kopie logiky z Apps Scriptu) ───────────
+function getVokativ(fullName) {
+  const firstName = (fullName || '').trim().split(/\s+/)[0];
+  if (!firstName) return fullName;
+  const name = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+
+  const spec = {
+    'Petr':'Petře','Jan':'Jane','Jakub':'Jakube',
+    'Ondřej':'Ondřeji','Ondrej':'Ondřeji',
+    'Jiří':'Jiří','Jiri':'Jiří',
+    'Tomáš':'Tomáši','Tomas':'Tomáši',
+    'Lukáš':'Lukáši','Lukas':'Lukáši',
+    'Marek':'Marku','Pavel':'Pavle',
+    'Michal':'Michale','Daniel':'Danieli',
+    'Patrik':'Patriku','Radek':'Radku',
+    'Josef':'Josefe','Filip':'Filipe',
+    'Adam':'Adame','David':'Davide',
+    'Miroslav':'Miroslave',
+  };
+  if (spec[name]) return spec[name];
+
+  if (/a$/i.test(name))       return name.slice(0,-1) + 'o';
+  if (/[ie]$/i.test(name))    return name;
+  if (/[šžčř]$/i.test(name))  return name + 'i';
+  if (/k$/i.test(name))       return name.slice(0,-2) + 'ku';
+  if (/l$/i.test(name))       return name.slice(0,-1) + 'le';
+  if (/n$/i.test(name))       return name + 'e';
+  return name + 'e';
+}
 
 // ─── Načtení dárků ────────────────────────────────────
 async function loadGifts() {
@@ -571,8 +657,8 @@ async function loadGifts() {
 // ─── Vykreslení mřížky ────────────────────────────────
 function renderGrid() {
   if (!gifts.length) {
-    document.getElementById('gifts-container').innerHTML = `
-      <div class="state-box"><p>Seznam dárků bude brzy k dispozici.</p></div>`;
+    document.getElementById('gifts-container').innerHTML =
+      `<div class="state-box"><p>Seznam dárků bude brzy k dispozici.</p></div>`;
     return;
   }
   document.getElementById('gifts-container').innerHTML =
@@ -580,11 +666,11 @@ function renderGrid() {
 }
 
 function cardHTML(g) {
-  const img = g.obrazek
+  const imgInner = g.obrazek
     ? `<img src="${IMAGES_PATH}${esc(g.obrazek)}" alt="${esc(g.nazev)}"
-            onerror="this.style.display='none';this.nextSibling.style.display='flex'">`
-    : '';
-  const placeholder = `<div class="card-placeholder" ${g.obrazek ? 'style="display:none"' : ''}>🎁</div>`;
+            onerror="this.style.display='none'">`
+    : `<span class="card-placeholder">🎁</span>`;
+
   const overlay = g.prihlasen
     ? `<div class="reserved-overlay">
          <span class="r-check">✓</span>
@@ -593,7 +679,7 @@ function cardHTML(g) {
 
   return `
   <div class="gift-card ${g.prihlasen ? 'reserved' : ''}" onclick="openModal(${g.id})">
-    <div class="card-image-wrap">${img}${placeholder}${overlay}</div>
+    <div class="card-image-wrap">${imgInner}${overlay}</div>
     <div class="card-body">
       <h3 class="card-title">${esc(g.nazev)}</h3>
       <p class="card-desc">${esc(g.popis)}</p>
@@ -615,21 +701,25 @@ function openModal(id) {
   document.getElementById('modal-inner').innerHTML = modalHTML(g);
   document.getElementById('overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
+  // Vždy scrollovat na vrch modalu
+  document.getElementById('modal').scrollTop = 0;
+  const ov = document.getElementById('overlay');
+  ov.scrollTop = 0;
 }
 
 function modalHTML(g) {
-  const img = g.obrazek
-    ? `<img class="modal-img" src="${IMAGES_PATH}${esc(g.obrazek)}" alt="${esc(g.nazev)}"
-            onerror="this.style.display='none';this.nextSibling.style.display='flex'">`
-    : '';
-  const imgPlaceholder = `<div class="modal-img-placeholder" ${g.obrazek ? 'style="display:none"' : ''}>🎁</div>`;
+  const imgInner = g.obrazek
+    ? `<img src="${IMAGES_PATH}${esc(g.obrazek)}" alt="${esc(g.nazev)}"
+            onerror="this.style.display='none'">`
+    : `<span class="modal-img-placeholder">🎁</span>`;
+
   const link = g.odkaz
     ? `<a class="modal-link" href="${g.odkaz}" target="_blank" rel="noopener">🔗 Zobrazit v e-shopu</a>`
     : '';
 
   if (g.prihlasen) {
     return `
-      ${img}${imgPlaceholder}
+      <div class="modal-img-wrap">${imgInner}</div>
       <h2 class="modal-title">${esc(g.nazev)}</h2>
       ${g.cena ? `<p class="modal-price">Orientační cena: cca ${esc(g.cena)}</p>` : ''}
       <p class="modal-desc">${esc(g.popisDetail || g.popis)}</p>
@@ -641,40 +731,39 @@ function modalHTML(g) {
   }
 
   return `
-    ${img}${imgPlaceholder}
+    <div class="modal-img-wrap">${imgInner}</div>
     <h2 class="modal-title">${esc(g.nazev)}</h2>
     ${g.cena ? `<p class="modal-price">Orientační cena: cca ${esc(g.cena)}</p>` : ''}
     <p class="modal-desc">${esc(g.popisDetail || g.popis)}</p>
     ${link}
     <p class="modal-escape">
       Tohle není to pravé? Vůbec nevadí. Podívej se dál –
-      jsme rádi, že jsi tu, ať už si vybereš cokoliv. 🤍
+      jsme rádi, že jsi tady, ať už si vybereš cokoliv. 🤍
     </p>
     <hr class="modal-divider">
     <h3 class="form-title">Chci zajistit tento dárek</h3>
-    <p class="form-note">
-      Prosíme tě o jméno a email – ne proto, abychom cokoliv evidovali,
-      ale proto, že ti chceme osobně napsat děkovnou zprávu.
-      Anonymní dárky jsou krásné, ale my bychom rádi věděli, komu patří náš dík.
-      Tvoje údaje nebudeme nikde zveřejňovat ani sdílet.
-    </p>
+    <div class="form-note">
+      <p>Prosíme tě o jméno a e-mail – jen proto, abychom ti mohli osobně poděkovat.</p>
+      <p>Anonymní dárky jsou krásné, ale my bychom rádi věděli, komu patří náš dík.</p>
+      <p>Tvoje údaje nikde nezveřejníme ani nikomu nepředáme.</p>
+    </div>
     <div class="form-group">
       <label for="f-jmeno">Tvoje jméno</label>
       <input id="f-jmeno" type="text" placeholder="Jana Novotná"
              autocomplete="name" inputmode="text">
     </div>
     <div class="form-group">
-      <label for="f-email">Tvůj email</label>
+      <label for="f-email">Tvůj e-mail</label>
       <input id="f-email" type="email" placeholder="jana@email.cz"
              autocomplete="email" inputmode="email">
-      <p class="form-error" id="f-error">Prosím vyplň jméno i platnou emailovou adresu.</p>
+      <p class="form-error" id="f-error">Prosím vyplň jméno i platnou e-mailovou adresu.</p>
     </div>
     <button class="btn-submit" id="btn-submit" onclick="submitReservation()">
-      🎁 Chci darovat toto
+      🎁 Chci darovat tento dárek
     </button>`;
 }
 
-// ─── Odeslání rezervace (přes GET – bez CORS problémů) ─
+// ─── Odeslání rezervace ───────────────────────────────
 async function submitReservation() {
   const jmeno = (document.getElementById('f-jmeno')?.value || '').trim();
   const email = (document.getElementById('f-email')?.value || '').trim();
@@ -693,8 +782,8 @@ async function submitReservation() {
     const params = new URLSearchParams({
       action: 'reserve',
       id:     currentId,
-      jmeno:  jmeno,
-      email:  email
+      jmeno,
+      email
     });
     const res    = await fetch(SCRIPT_URL + '?' + params);
     const result = await res.json();
@@ -702,15 +791,15 @@ async function submitReservation() {
     if (result.success) {
       markReservedAndShowSuccess(jmeno);
     } else {
-      btnEl.disabled    = false;
-      btnEl.textContent = '🎁 Chci darovat toto';
-      errEl.textContent = result.message || 'Něco se pokazilo. Zkuste to prosím znovu.';
+      btnEl.disabled      = false;
+      btnEl.textContent   = '🎁 Chci darovat tento dárek';
+      errEl.textContent   = result.message || 'Něco se pokazilo. Zkuste to prosím znovu.';
       errEl.style.display = 'block';
     }
   } catch (err) {
-    btnEl.disabled    = false;
-    btnEl.textContent = '🎁 Chci darovat toto';
-    errEl.textContent = 'Nepodařilo se odeslat. Zkontrolujte připojení a zkuste znovu.';
+    btnEl.disabled      = false;
+    btnEl.textContent   = '🎁 Chci darovat tento dárek';
+    errEl.textContent   = 'Nepodařilo se odeslat. Zkontrolujte připojení a zkuste znovu.';
     errEl.style.display = 'block';
   }
 }
@@ -720,14 +809,16 @@ function markReservedAndShowSuccess(jmeno) {
   if (g) g.prihlasen = true;
   renderGrid();
 
-  const firstName = jmeno.split(' ')[0];
+  // FIX: vokativ v potvrzení
+  const vokativ = getVokativ(jmeno);
   document.getElementById('modal-inner').innerHTML = `
     <div class="success-state">
       <span class="s-icon">🤍</span>
-      <h3>Děkujeme, ${esc(firstName)}!</h3>
-      <p>Tvůj výběr jsme zaznamenali.<br>
-         Za chvíli ti přijde potvrzovací email – moc si toho vážíme.</p>
+      <h3>Děkujeme, ${esc(vokativ)}!</h3>
+      <p>Tvůj dárek jsme si s radostí poznamenali.<br>
+         Za chvíli ti přijde potvrzovací e-mail – moc si toho vážíme.</p>
     </div>`;
+  document.getElementById('modal').scrollTop = 0;
 }
 
 // ─── Zavření modalu ───────────────────────────────────
