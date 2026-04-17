@@ -759,7 +759,7 @@ function modalHTML(g) {
       <p class="form-error" id="f-error">Prosím vyplň jméno i platnou e-mailovou adresu.</p>
     </div>
     <button class="btn-submit" id="btn-submit" onclick="submitReservation()">
-      🎁 Chci darovat tento dárek
+      🎁 Zajistím tento dárek
     </button>`;
 }
 
@@ -792,13 +792,13 @@ async function submitReservation() {
       markReservedAndShowSuccess(jmeno);
     } else {
       btnEl.disabled      = false;
-      btnEl.textContent   = '🎁 Chci darovat tento dárek';
+      btnEl.textContent   = '🎁 Zajistím tento dárek';
       errEl.textContent   = result.message || 'Něco se pokazilo. Zkuste to prosím znovu.';
       errEl.style.display = 'block';
     }
   } catch (err) {
     btnEl.disabled      = false;
-    btnEl.textContent   = '🎁 Chci darovat tento dárek';
+    btnEl.textContent   = '🎁 Zajistím tento dárek';
     errEl.textContent   = 'Nepodařilo se odeslat. Zkontrolujte připojení a zkuste znovu.';
     errEl.style.display = 'block';
   }
