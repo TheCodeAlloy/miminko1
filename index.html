@@ -101,7 +101,7 @@
     .hero-body {
       font-family: 'Playfair Display', serif;
       font-style: italic;
-      font-size: clamp(17px, 2.5vw, 20px);
+      font-size: clamp(14px, 2.2vw, 16px);
       line-height: 1.95;
       color: var(--text-light);
       max-width: 540px;
@@ -395,6 +395,14 @@
     }
     .modal-link:hover { text-decoration: underline; }
 
+    .modal-shop-note {
+      font-size: 12px;
+      color: var(--text-light);
+      font-style: italic;
+      margin-bottom: 18px;
+      margin-top: -14px;
+    }
+
     .modal-escape {
       font-size: 13px;
       color: var(--text-light);
@@ -609,6 +617,14 @@ const IMAGES_PATH = 'images/';
 let gifts     = [];
 let currentId = null;
 
+// ─── Formátování ceny ────────────────────────────────
+function formatPrice(cena) {
+  if (!cena) return '';
+  const num = parseFloat(String(cena).replace(/\s/g, '').replace(',', '.'));
+  if (isNaN(num)) return String(cena); // pokud už obsahuje text, zobraz jak je
+  return num.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + '\u00a0Kč';
+}
+
 // ─── Vokativ (kopie logiky z Apps Scriptu) ───────────
 function getVokativ(fullName) {
   const firstName = (fullName || '').trim().split(/\s+/)[0];
@@ -684,7 +700,7 @@ function cardHTML(g) {
       <h3 class="card-title">${esc(g.nazev)}</h3>
       <p class="card-desc">${esc(g.popis)}</p>
       <div class="card-footer">
-        <span class="card-price">${g.cena ? 'cca ' + esc(g.cena) : ''}</span>
+        <span class="card-price">${g.cena ? 'cca ' + formatPrice(g.cena) : ''}</span>
         <span class="card-cta ${g.prihlasen ? 'is-reserved' : ''}">
           ${g.prihlasen ? 'Obsazeno' : 'Zobrazit detail →'}
         </span>
@@ -721,7 +737,7 @@ function modalHTML(g) {
     return `
       <div class="modal-img-wrap">${imgInner}</div>
       <h2 class="modal-title">${esc(g.nazev)}</h2>
-      ${g.cena ? `<p class="modal-price">Orientační cena: cca ${esc(g.cena)}</p>` : ''}
+      ${g.cena ? `<p class="modal-price">Orientační cena: cca ${formatPrice(g.cena)}</p>` : ''}
       <p class="modal-desc">${esc(g.popisDetail || g.popis)}</p>
       ${link}
       <div class="reserved-badge">
@@ -733,9 +749,10 @@ function modalHTML(g) {
   return `
     <div class="modal-img-wrap">${imgInner}</div>
     <h2 class="modal-title">${esc(g.nazev)}</h2>
-    ${g.cena ? `<p class="modal-price">Orientační cena: cca ${esc(g.cena)}</p>` : ''}
+    ${g.cena ? `<p class="modal-price">Orientační cena: cca ${formatPrice(g.cena)}</p>` : ''}
     <p class="modal-desc">${esc(g.popisDetail || g.popis)}</p>
     ${link}
+    ${g.odkaz ? `<p class="modal-shop-note">Tento odkaz je jen pro inspiraci – dárek samozřejmě můžeš pořídit kdekoliv.</p>` : ''}
     <p class="modal-escape">
       Tohle není to pravé? Vůbec nevadí. Podívej se dál –
       jsme rádi, že jsi tady, ať už si vybereš cokoliv. 🤍
@@ -749,17 +766,17 @@ function modalHTML(g) {
     </div>
     <div class="form-group">
       <label for="f-jmeno">Tvoje jméno</label>
-      <input id="f-jmeno" type="text" placeholder="..."
+      <input id="f-jmeno" type="text" placeholder="Jana Novotná"
              autocomplete="name" inputmode="text">
     </div>
     <div class="form-group">
       <label for="f-email">Tvůj e-mail</label>
-      <input id="f-email" type="email" placeholder="..."
+      <input id="f-email" type="email" placeholder="jana@email.cz"
              autocomplete="email" inputmode="email">
       <p class="form-error" id="f-error">Prosím vyplň jméno i platnou e-mailovou adresu.</p>
     </div>
     <button class="btn-submit" id="btn-submit" onclick="submitReservation()">
-      🎁 Zajistím tento dárek
+      🎁 Chci darovat tento dárek
     </button>`;
 }
 
@@ -792,13 +809,13 @@ async function submitReservation() {
       markReservedAndShowSuccess(jmeno);
     } else {
       btnEl.disabled      = false;
-      btnEl.textContent   = '🎁 Zajistím tento dárek';
+      btnEl.textContent   = '🎁 Chci darovat tento dárek';
       errEl.textContent   = result.message || 'Něco se pokazilo. Zkuste to prosím znovu.';
       errEl.style.display = 'block';
     }
   } catch (err) {
     btnEl.disabled      = false;
-    btnEl.textContent   = '🎁 Zajistím tento dárek';
+    btnEl.textContent   = '🎁 Chci darovat tento dárek';
     errEl.textContent   = 'Nepodařilo se odeslat. Zkontrolujte připojení a zkuste znovu.';
     errEl.style.display = 'block';
   }
