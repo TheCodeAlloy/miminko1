@@ -33,16 +33,13 @@
     }
 
     /* ═══════════════════════════════════════════════════
-       HERO – split layout: fotka vlevo, text vpravo
-       Na mobilu: fotka nahoře, text dole
+       HERO
     ═══════════════════════════════════════════════════ */
     .hero {
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
-
-    /* Fotka – horní polovina na mobilu, levá polovina na desktopu */
     .hero-photo {
       position: relative;
       flex: 0 0 50vh;
@@ -56,7 +53,6 @@
       object-position: center top;
       display: block;
     }
-    /* Jemný přechod dole u fotky aby splynula s textem */
     .hero-photo::after {
       content: '';
       position: absolute;
@@ -64,8 +60,6 @@
       height: 80px;
       background: linear-gradient(to bottom, transparent, var(--cream));
     }
-
-    /* Textová část */
     .hero-text-wrap {
       padding: 40px 28px 52px;
       display: flex;
@@ -74,14 +68,12 @@
       align-items: center;
       text-align: center;
     }
-
     .hero-icon {
       font-size: 44px;
       display: block;
       margin-bottom: 18px;
       filter: drop-shadow(0 2px 8px rgba(106,174,232,0.35));
     }
-
     .hero h1 {
       font-family: 'Playfair Display', serif;
       font-size: clamp(28px, 6vw, 48px);
@@ -90,18 +82,16 @@
       line-height: 1.15;
       margin-bottom: 24px;
     }
-
     .hero-divider {
       width: 48px;
       height: 2px;
       margin: 0 auto 24px;
       background: linear-gradient(to right, transparent, var(--blue), transparent);
     }
-
     .hero-body {
       font-family: 'Playfair Display', serif;
       font-style: italic;
-      font-size: clamp(14px, 2.2vw, 16px);
+      font-size: clamp(17px, 2.5vw, 20px);
       line-height: 1.95;
       color: var(--text-light);
       max-width: 540px;
@@ -109,20 +99,12 @@
     .hero-body p { margin-bottom: 14px; }
     .hero-body p:last-child { margin-bottom: 0; }
 
-    /* Desktop: vedle sebe */
     @media (min-width: 860px) {
-      .hero {
-        flex-direction: row;
-        min-height: 100vh;
-      }
-      .hero-photo {
-        flex: 0 0 50%;
-        height: auto;
-      }
+      .hero { flex-direction: row; min-height: 100vh; }
+      .hero-photo { flex: 0 0 50%; height: auto; }
       .hero-photo::after {
         top: 0; bottom: 0; left: auto; right: 0;
-        width: 80px;
-        height: 100%;
+        width: 80px; height: 100%;
         background: linear-gradient(to right, transparent, var(--cream));
       }
       .hero-text-wrap {
@@ -142,7 +124,6 @@
       margin: 0 auto;
       padding: 64px 20px 40px;
     }
-
     .section-header {
       text-align: center;
       margin-bottom: 44px;
@@ -181,7 +162,6 @@
     }
     .gift-card.reserved { cursor: default; }
 
-    /* Obrázek – FIX: contain aby byl vidět celý */
     .card-image-wrap {
       position: relative;
       height: 200px;
@@ -200,11 +180,24 @@
       display: block;
       padding: 8px;
     }
-    .card-placeholder {
-      font-size: 52px;
+    .card-placeholder { font-size: 52px; }
+
+    /* Vícenásobný odznak na kartičce */
+    .card-multi-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(106,174,232,0.92);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 9px;
+      border-radius: 20px;
+      backdrop-filter: blur(4px);
     }
 
-    /* Obsazeno overlay */
     .reserved-overlay {
       position: absolute;
       inset: 0;
@@ -262,7 +255,6 @@
     }
     .card-cta.is-reserved { color: var(--text-light); }
 
-    /* Věta pod gridem */
     .gifts-footer-note {
       text-align: center;
       margin-top: 36px;
@@ -272,7 +264,7 @@
     }
 
     /* ═══════════════════════════════════════════════════
-       MODAL – FIX: začíná od vrchu, ne uprostřed
+       MODAL
     ═══════════════════════════════════════════════════ */
     .overlay {
       display: none;
@@ -280,7 +272,6 @@
       inset: 0;
       background: rgba(30,40,60,0.48);
       z-index: 200;
-      /* Mobil: modal vyskočí zdola */
       justify-content: flex-end;
       align-items: flex-end;
     }
@@ -288,7 +279,6 @@
 
     @media (min-width: 640px) {
       .overlay {
-        /* Desktop: modal od vrchu, ne uprostřed */
         justify-content: center;
         align-items: flex-start;
         padding: 40px 24px 24px;
@@ -300,7 +290,6 @@
       background: var(--white);
       width: 100%;
       max-width: 520px;
-      /* Mobil: max 92% výšky s posouváním */
       max-height: 92vh;
       overflow-y: auto;
       border-radius: var(--radius) var(--radius) 0 0;
@@ -312,7 +301,6 @@
     @media (min-width: 640px) {
       .modal {
         border-radius: var(--radius);
-        /* Desktop: přirozená výška, posouvání zajistí overlay */
         max-height: none;
         overflow-y: visible;
         margin-bottom: 40px;
@@ -339,11 +327,9 @@
       align-items: center;
       justify-content: center;
       z-index: 10;
-      flex-shrink: 0;
     }
     .modal-close:hover { background: var(--blue-light); }
 
-    /* Modal obrázek – FIX: contain pro výškové fotky */
     .modal-img-wrap {
       width: 100%;
       height: 220px;
@@ -369,7 +355,7 @@
       font-family: 'Playfair Display', serif;
       font-size: 22px;
       margin-bottom: 6px;
-      padding-right: 36px; /* místo pro close button */
+      padding-right: 36px;
     }
     .modal-price {
       font-size: 15px;
@@ -391,7 +377,7 @@
       font-weight: 700;
       color: var(--blue);
       text-decoration: none;
-      margin-bottom: 22px;
+      margin-bottom: 8px;
     }
     .modal-link:hover { text-decoration: underline; }
 
@@ -400,7 +386,18 @@
       color: var(--text-light);
       font-style: italic;
       margin-bottom: 18px;
-      margin-top: -14px;
+    }
+
+    /* Vícenásobný info box v modalu */
+    .modal-multi-note {
+      background: var(--blue-pale);
+      border-left: 3px solid var(--blue);
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--text-light);
+      line-height: 1.65;
+      margin-bottom: 22px;
     }
 
     .modal-escape {
@@ -428,7 +425,7 @@
     .reserved-badge .rb-icon { font-size: 34px; display: block; margin-bottom: 8px; }
     .reserved-badge p { font-size: 15px; font-weight: 700; color: #388e3c; }
 
-    /* ─── FORMULÁŘ ─── */
+    /* FORMULÁŘ */
     .form-title {
       font-family: 'Playfair Display', serif;
       font-size: 19px;
@@ -494,7 +491,7 @@
     .btn-submit:hover:not(:disabled) { opacity: 0.92; transform: scale(1.01); }
     .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    /* ─── ÚSPĚCH ─── */
+    /* ÚSPĚCH */
     .success-state {
       text-align: center;
       padding: 28px 8px 12px;
@@ -511,7 +508,7 @@
       line-height: 1.75;
     }
 
-    /* ─── LOADING / ERROR ─── */
+    /* LOADING / ERROR */
     .state-box {
       text-align: center;
       padding: 72px 24px;
@@ -531,7 +528,7 @@
       30%            { transform: translateY(-9px); }
     }
 
-    /* ─── FOOTER ─── */
+    /* FOOTER */
     footer {
       text-align: center;
       padding: 36px 20px;
@@ -543,19 +540,11 @@
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════════════
-     HERO – split: fotka + text vedle sebe (desktop)
-     nebo fotka nahoře + text dole (mobil)
-════════════════════════════════════════════════════════ -->
 <section class="hero">
-
-  <!-- Fotka -->
   <div class="hero-photo">
     <img src="images/hero.jpg" alt="Eliška a David čekají miminko"
          onerror="this.style.display='none'">
   </div>
-
-  <!-- Text -->
   <div class="hero-text-wrap">
     <span class="hero-icon">🍼</span>
     <h1>Někdo malý<br>přichází na svět</h1>
@@ -567,12 +556,8 @@
       <p>Děkujeme, že jste součástí našeho příběhu.</p>
     </div>
   </div>
-
 </section>
 
-<!-- ══════════════════════════════════════════════════════
-     SEZNAM DÁRKŮ
-════════════════════════════════════════════════════════ -->
 <section class="gifts-section">
   <div class="section-header">
     <h2>Malé (i větší) radosti pro miminko</h2>
@@ -589,9 +574,6 @@
   </p>
 </section>
 
-<!-- ══════════════════════════════════════════════════════
-     MODAL
-════════════════════════════════════════════════════════ -->
 <div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
   <div class="modal" id="modal" role="dialog" aria-modal="true">
     <button class="modal-close" onclick="closeModal()" aria-label="Zavřít">✕</button>
@@ -603,16 +585,9 @@
   <p>Děkujeme, že jste s námi. 🤍</p>
 </footer>
 
-<!-- ══════════════════════════════════════════════════════
-     JAVASCRIPT
-════════════════════════════════════════════════════════ -->
 <script>
-// ─────────────────────────────────────────────────────
-//  KONFIGURACE
-// ─────────────────────────────────────────────────────
 const SCRIPT_URL  = 'https://script.google.com/macros/s/AKfycbyBK_V64geUR7IzUX7E3cO2Ob21657-YLZkL9zWR7EmCEiaXa9YhoUQWUBHm0qaCMad9w/exec';
 const IMAGES_PATH = 'images/';
-// ─────────────────────────────────────────────────────
 
 let gifts     = [];
 let currentId = null;
@@ -621,11 +596,11 @@ let currentId = null;
 function formatPrice(cena) {
   if (!cena) return '';
   const num = parseFloat(String(cena).replace(/\s/g, '').replace(',', '.'));
-  if (isNaN(num)) return String(cena); // pokud už obsahuje text, zobraz jak je
+  if (isNaN(num)) return String(cena);
   return num.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + '\u00a0Kč';
 }
 
-// ─── Vokativ (kopie logiky z Apps Scriptu) ───────────
+// ─── Vokativ ──────────────────────────────────────────
 function getVokativ(fullName) {
   const firstName = (fullName || '').trim().split(/\s+/)[0];
   if (!firstName) return fullName;
@@ -687,22 +662,30 @@ function cardHTML(g) {
             onerror="this.style.display='none'">`
     : `<span class="card-placeholder">🎁</span>`;
 
-  const overlay = g.prihlasen
+  // Vícenásobná položka – odznak místo overlay
+  const badge = g.viceNasobne
+    ? `<div class="card-multi-badge">Může darovat více lidí</div>`
+    : '';
+
+  // Obsazeno overlay – pouze pro standardní položky
+  const overlay = (!g.viceNasobne && g.prihlasen)
     ? `<div class="reserved-overlay">
          <span class="r-check">✓</span>
          <span class="r-label">Již zajištěno</span>
        </div>` : '';
 
+  const isReserved = !g.viceNasobne && g.prihlasen;
+
   return `
-  <div class="gift-card ${g.prihlasen ? 'reserved' : ''}" onclick="openModal(${g.id})">
-    <div class="card-image-wrap">${imgInner}${overlay}</div>
+  <div class="gift-card ${isReserved ? 'reserved' : ''}" onclick="openModal(${g.id})">
+    <div class="card-image-wrap">${imgInner}${badge}${overlay}</div>
     <div class="card-body">
       <h3 class="card-title">${esc(g.nazev)}</h3>
       <p class="card-desc">${esc(g.popis)}</p>
       <div class="card-footer">
         <span class="card-price">${g.cena ? 'cca ' + formatPrice(g.cena) : ''}</span>
-        <span class="card-cta ${g.prihlasen ? 'is-reserved' : ''}">
-          ${g.prihlasen ? 'Obsazeno' : 'Zobrazit detail →'}
+        <span class="card-cta ${isReserved ? 'is-reserved' : ''}">
+          ${isReserved ? 'Obsazeno' : 'Zobrazit detail →'}
         </span>
       </div>
     </div>
@@ -717,10 +700,8 @@ function openModal(id) {
   document.getElementById('modal-inner').innerHTML = modalHTML(g);
   document.getElementById('overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
-  // Vždy scrollovat na vrch modalu
   document.getElementById('modal').scrollTop = 0;
-  const ov = document.getElementById('overlay');
-  ov.scrollTop = 0;
+  document.getElementById('overlay').scrollTop = 0;
 }
 
 function modalHTML(g) {
@@ -733,26 +714,39 @@ function modalHTML(g) {
     ? `<a class="modal-link" href="${g.odkaz}" target="_blank" rel="noopener">🔗 Zobrazit v e-shopu</a>`
     : '';
 
-  if (g.prihlasen) {
+  const shopNote = g.odkaz
+    ? `<p class="modal-shop-note">Tento odkaz je jen pro inspiraci – dárek samozřejmě můžeš pořídit kdekoliv.</p>`
+    : '';
+
+  // Standardní obsazená položka
+  if (!g.viceNasobne && g.prihlasen) {
     return `
       <div class="modal-img-wrap">${imgInner}</div>
       <h2 class="modal-title">${esc(g.nazev)}</h2>
       ${g.cena ? `<p class="modal-price">Orientační cena: cca ${formatPrice(g.cena)}</p>` : ''}
       <p class="modal-desc">${esc(g.popisDetail || g.popis)}</p>
-      ${link}
+      ${link}${shopNote}
       <div class="reserved-badge">
         <span class="rb-icon">✅</span>
         <p>Tento dárek je již zajištěn. Díky!</p>
       </div>`;
   }
 
+  // Info box pro vícenásobné položky
+  const multiNote = g.viceNasobne
+    ? `<div class="modal-multi-note">
+         Tuto položku může darovat více lidí – pokud tě zaujala, přihlaš se klidně i ty. Každý příspěvek nás potěší stejně.
+       </div>`
+    : '';
+
+  // Standardní nebo vícenásobná volná položka – zobrazit formulář
   return `
     <div class="modal-img-wrap">${imgInner}</div>
     <h2 class="modal-title">${esc(g.nazev)}</h2>
     ${g.cena ? `<p class="modal-price">Orientační cena: cca ${formatPrice(g.cena)}</p>` : ''}
     <p class="modal-desc">${esc(g.popisDetail || g.popis)}</p>
-    ${link}
-    ${g.odkaz ? `<p class="modal-shop-note">Tento odkaz je jen pro inspiraci – dárek samozřejmě můžeš pořídit kdekoliv.</p>` : ''}
+    ${link}${shopNote}
+    ${multiNote}
     <p class="modal-escape">
       Tohle není to pravé? Vůbec nevadí. Podívej se dál –
       jsme rádi, že jsi tady, ať už si vybereš cokoliv. 🤍
@@ -796,17 +790,12 @@ async function submitReservation() {
   btnEl.textContent   = 'Odesílám…';
 
   try {
-    const params = new URLSearchParams({
-      action: 'reserve',
-      id:     currentId,
-      jmeno,
-      email
-    });
+    const params = new URLSearchParams({ action: 'reserve', id: currentId, jmeno, email });
     const res    = await fetch(SCRIPT_URL + '?' + params);
     const result = await res.json();
 
     if (result.success) {
-      markReservedAndShowSuccess(jmeno);
+      showSuccess(jmeno);
     } else {
       btnEl.disabled      = false;
       btnEl.textContent   = '🎁 Chci darovat tento dárek';
@@ -821,12 +810,12 @@ async function submitReservation() {
   }
 }
 
-function markReservedAndShowSuccess(jmeno) {
+function showSuccess(jmeno) {
+  // U standardních položek označ jako obsazenou, vícenásobné nechej být
   const g = gifts.find(x => x.id === currentId);
-  if (g) g.prihlasen = true;
+  if (g && !g.viceNasobne) g.prihlasen = true;
   renderGrid();
 
-  // FIX: vokativ v potvrzení
   const vokativ = getVokativ(jmeno);
   document.getElementById('modal-inner').innerHTML = `
     <div class="success-state">
@@ -853,7 +842,6 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeModal();
 });
 
-// ─── Pomocná funkce ───────────────────────────────────
 function esc(str) {
   return String(str)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;')
